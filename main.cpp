@@ -25,3 +25,50 @@ Steps:
 
 
 */
+
+int NumberFunction(Image one, Image two)
+{
+    int common = 0;
+    for (unsigned int i = 0; i < one.tags.size(); i++)
+    {
+        for (unsigned int j = 0; j < two.tags.size(); j++)
+        {
+            if (one.tags[i] == two.tags[j])
+                common++;
+        }
+    }
+}
+
+int Number2Function(Image one, Image two)
+{
+    int common = 0;
+    for (unsigned int i = 0; i < one.tags.size(); i++)
+    {
+        for (unsigned int j = 0; j < two.tags.size(); j++)
+        {
+            if (one.tags[i] == two.tags[j])
+                common++;
+        }
+    }
+
+    int return2 = two.tags.size() - common;
+    return return2;
+}
+int Number3Function(Image one, Image two)
+{
+    int common = 0;
+    for (unsigned int i = 0; i < one.tags.size(); i++)
+    {
+        for (unsigned int j = 0; j < two.tags.size(); j++)
+        {
+            if (one.tags[i] == two.tags[j])
+                common++;
+        }
+    }
+
+}
+
+int getScore(Image one, Image two)
+{
+    
+}
