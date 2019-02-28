@@ -193,6 +193,7 @@ vector<Slide> getSlides(vector<Image> horizontals, vector<Image> verticals)
 	int verticalsSize = verticals.size();
 	int j = 0 ;
 
+
 	sort(horizontals.begin(), horizontals.end(), less_than_key());
 	sort(verticals.begin(), verticals.end(), less_than_key());
 
@@ -209,6 +210,28 @@ vector<Slide> getSlides(vector<Image> horizontals, vector<Image> verticals)
 
 	return ret;
 
+}
+
+map<string, vector<Slide>> getSlides2(map<string, int> freq, vector<Slide> output)
+{
+	map<string, vector<Slide>> ret;
+	vector<Slide> temp;
+	for (auto it = freq.begin(); it != freq.end(); it++)
+	{
+		for (int i = 0; i < output.size(); i++)
+		{
+			for (int j = 0; j < output[i].slideTags.size(); j++)
+			{
+				if (it->first == output[i].slideTags[j])
+				{
+					temp.push_back(output[i]);
+				}
+			}
+			ret[it->first] = temp;
+			temp.clear();
+		}
+	}
+	return ret;
 }
 
 int main(int argc, char const *argv[])
@@ -229,7 +252,10 @@ int main(int argc, char const *argv[])
 		{
 			output[i].Print();
 		}
-		
+
+		map<string, vector<Slide>> allSlides = getSlides2(collection.freq, output);
+
+
 	}		 
 
 	return 0;
