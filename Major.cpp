@@ -3,7 +3,6 @@
 #include <fstream>
 #include <algorithm>
 #include <sstream>
-#include <math.h>
 #include <string>
 using namespace std;
 
@@ -29,9 +28,75 @@ struct Image
     }
 };
 
+int getScore(Image left, Image right)
+{
+    int common = 0;
+
+    for (unsigned int i = 0; i < left.tags.size(); i++)
+    {
+        for (unsigned int j = 0; j < right.tags.size(); j++)
+        {
+            if (left.tags[i] == right.tags[j])
+                common++;
+        }
+    }
+
+    int leftCount = left.tags.size() - common;
+    int rightCount = right.tags.size() - common;
+
+    int returner1 = min(common, leftCount);
+    int returner2 = min(returner1, rightCount);
+
+    return returner2;
+}
+
+struct Slide
+{
+    vector<string> slideTags;
+    int numTags;
+    bool horizontal;
+    bool used;
+
+    Slide()
+    {
+        this->numTags = 0;
+        this->horizontal = true;
+        this->used = false;
+    }
+
+    Slide(Image one, Image two)
+    {
+        this->slideTags = one.tags;
+        for (unsigned int i = 0; i < two.numTags; i++)
+        {
+            bool add;
+            for (unsigned int j = 0; j < this->slideTags.size(); j++)
+            {
+                if (this->slideTags[j] == two.tags[i])
+                    add = false;
+            }
+            
+            if(add)
+                this->slideTags.push_back(two.tags[i]);
+        }
+        this->horizontal = false; // these are vertical
+        this->used = false;
+        this->numTags = this->slideTags.size();
+    }
+
+    Slide(Image one)
+    {
+        this->slideTags = one.tags;
+        this->used = false;
+        this->horizontal = true;
+        this->numTags = one.tags.size();
+    }
+};
+
 struct Collection
 {
-    vector<Image> images;
+    vector<Image> images;    //horizontal
+    vector<Image> vertImage; // verticals
     int numPhotos;
     string line, temp, temp2;
     Image tempImage;
@@ -52,21 +117,25 @@ struct Collection
             stringstream ss(line);
 
             getline(ss, temp, ' ');
-            tempImage.horizontal = temp == "h" ? true : false;
+            tempImage.horizontal = temp == "H" ? true : false;
             getline(ss, temp2, ' ');
             tempImage.numTags = stoi(temp2);
             for (int i = 0; i < tempImage.numTags; i++)
             {
                 string tempTag;
 
-                if (i == tempImage.numTags - 1)
+                if (i != tempImage.numTags - 1)
                     getline(ss, tempTag, ' ');
                 else
                     getline(ss, tempTag);
 
                 tempImage.tags.push_back(tempTag);
             }
-            images.push_back(tempImage);
+            if (tempImage.horizontal)
+                images.push_back(tempImage);
+            else
+                vertImage.push_back(tempImage);
+
             tempImage.tags.clear();
         }
 
@@ -78,62 +147,13 @@ struct Collection
     }
 };
 
-struct Slides
-{
-    vector<string> slideTags;
-    int numTags;
-    bool horizontal;
-    bool used;
-
-
-    Slides slideCreationV (Image one, Image two)
-    {
-        Slides combo;
-        combo.slideTags = one.tags;
-        for (unsigned int i=0; i < two.numTags; i++)
-        {
-            combo.slideTags.push_back(two.tags[i]);
-        }
-    }
-
-    Slides slideCreationH (Image one)
-    {
-        Slides horiz;
-        horiz.slideTags = one.tags;
-        horiz.numTags = 
-    }
-};
-
-int getScore(Image left, Image right)
-{
-    int common = 0;
-    
-    for (unsigned int i = 0; i < left.numTags; i++)
-    {
-        for (unsigned int j = 0; j < right.numTags; j++)
-        {
-            if (left.tags[i] == right.tags[j])
-                common++;
-        }
-    }
-
-    int leftCount = left.tags.size() - common;
-    int rightCount = right.tags.size() - common;
-
-    int returner1 = min(common, leftCount);
-    int returner2 = min(returner1, rightCount);
-
-    return returner2;
-}
-
-vector <Slides> getSlides(vector<Image> vertImage)
+vector<Slide> getSlides(vector<Image> vertImage)
 {
     unsigned int loopsize = vertImage.size() / 2;
-    vector <Slides> returnVect;
-    for(unsigned int i = 0; i < loopsize; i++)
+    vector<Slide> returnVect;
+    for (unsigned int i = 0; i < loopsize; i++)
     {
-        Slides newSlide;
-
+        Slide newSlide;
     }
 }
 
@@ -143,9 +163,10 @@ int main(int argc, char const *argv[])
         cout << "Enter more than 2 input line arguments" << endl;
     else
     {
-        Collection *collection = new Collection(argv[1]);
-        // collection->GetInput(argv[1]);
-        
+        Collection collection(argv[1]);
+        // collection->sortThem();
+
+        // cout << getScore(collection.images[0], collection.images[1]) << endl;
     }
 
     return 0;
