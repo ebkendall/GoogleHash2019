@@ -42,9 +42,7 @@ struct Collection
 		fstream file(inputFile);
 		getline(file, line);
 		
-		// num photos 
 		numPhotos = atoi(line.c_str());
-		// loop through all photos 
 
 		for (int i = 0; i < numPhotos; i++)
 		{
@@ -52,34 +50,23 @@ struct Collection
 
 			stringstream ss(line); 
 			
-
 			getline(ss, temp, ' '); 
-			// cout << temp << endl;
 			tempImage.horizontal = temp == "h" ? true : false;
 			getline(ss, temp2, ' ');
-			// cout << temp2 << endl;
 			tempImage.numTags = stoi(temp2);
 			for (int i = 0; i < tempImage.numTags; i++)
 			{
 				string tempTag;
 				
 				if (i == tempImage.numTags - 1)
-				{
 					getline(ss, tempTag, ' ');
-				}
 				else 
-				{
 					getline(ss, tempTag);
-				}
 				
 				tempImage.tags.push_back(tempTag);
 			}
-
 			images.push_back(tempImage);
 			tempImage.tags.clear();
-
-			
-
 		}	
 		
 		// This works
@@ -87,10 +74,8 @@ struct Collection
 		// {
 		// 	images[i].Print();
 		// }
-
 		
 	}
-
 };
 
 
