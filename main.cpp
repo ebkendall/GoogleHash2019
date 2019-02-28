@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <sstream> 
 #include <string>
+#include <map> 
 using namespace std;
-
 
 struct Image 
 {
@@ -124,6 +124,7 @@ struct Collection
 	string line, temp, temp2; 
 	Image tempImage; 
 	int counter = 0;
+	map<string, int> freq;
 
 	Collection(){}
 
@@ -152,6 +153,8 @@ struct Collection
 					getline(ss, tempTag, ' ');
 				else 
 					getline(ss, tempTag);
+
+				freq[tempTag]++;
 				
 				tempImage.tags.push_back(tempTag);
 			}
@@ -175,10 +178,23 @@ struct Collection
 
 };
 
+struct less_than_key
+{
+	inline bool operator()(const Image &struct1, const Image &struct2)
+	{
+		return (struct1.numTags < struct2.numTags);
+	}
+};
+
+
 vector<Slide> getSlides(vector<Image> horizontals, vector<Image> verticals)
 {
 	vector<Slide> ret;
+	int verticalsSize = verticals.size();
+	int j = 0 ;
 
+	sort(horizontals.begin(), horizontals.end(), less_than_key());
+	sort(verticals.begin(), verticals.end(), less_than_key());
 
 	for (int i = 0; i < horizontals.size(); i++)
 	{
@@ -201,25 +217,19 @@ int main(int argc, char const *argv[])
 		cout << "Enter more than 2 input line arguments" << endl;
 	else 
 	{
+		Collection collection(argv[1]);
+		// collection->sortThem();
+
+		// cout << getScore(collection.images[0], collection.images[1]) << endl;
+
+		vector<Slide> output = getSlides(collection.images, collection.vertImage);
+
+		cout << output.size() << endl;
+		for (int i = 0; i < output.size(); i++)
 		{
-			Collection collection(argv[1]);
-			// collection->sortThem();
-
-			// cout << getScore(collection.images[0], collection.images[1]) << endl;
-
-			vector<Slide> output = getSlides(collection.images, collection.vertImage);
-
-			cout << output.size() << endl;
-			for (int i = 0; i < output.size(); i++)
-			{
-				output[i].Print();
-			}
-		}
-		{
-			
+			output[i].Print();
 		}
 		
-
 	}		 
 
 	return 0;
