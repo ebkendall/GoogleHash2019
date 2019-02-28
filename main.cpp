@@ -186,13 +186,20 @@ struct less_than_key
 	}
 };
 
+struct less_than_key2
+{
+	inline bool operator()(const Slide &struct1, const Slide &struct2)
+	{
+		return (struct1.numTags < struct2.numTags);
+	}
+};
+
 
 vector<Slide> getSlides(vector<Image> horizontals, vector<Image> verticals)
 {
 	vector<Slide> ret;
 	int verticalsSize = verticals.size();
-	int j = 0 ;
-
+	int j = 0;
 
 	sort(horizontals.begin(), horizontals.end(), less_than_key());
 	sort(verticals.begin(), verticals.end(), less_than_key());
@@ -207,6 +214,8 @@ vector<Slide> getSlides(vector<Image> horizontals, vector<Image> verticals)
 		Slide temp(verticals[i], verticals[i+1]);
 		ret.push_back(temp);
 	}
+
+	sort(ret.begin(), ret.end(), less_than_key2());
 
 	return ret;
 
@@ -253,7 +262,8 @@ int main(int argc, char const *argv[])
 			output[i].Print();
 		}
 
-		map<string, vector<Slide>> allSlides = getSlides2(collection.freq, output);
+		// map<string, vector<Slide>> allSlides = getSlides2(collection.freq, output);
+	
 
 
 	}		 
