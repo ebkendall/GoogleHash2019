@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <sstream>
 #include <math.h>
+#include <string>
 using namespace std;
 
 struct Image
@@ -77,13 +78,39 @@ struct Collection
     }
 };
 
+struct Slides
+{
+    vector<string> slideTags;
+    int numTags;
+    bool horizontal;
+    bool used;
+
+
+    Slides slideCreationV (Image one, Image two)
+    {
+        Slides combo;
+        combo.slideTags = one.tags;
+        for (unsigned int i=0; i < two.numTags; i++)
+        {
+            combo.slideTags.push_back(two.tags[i]);
+        }
+    }
+
+    Slides slideCreationH (Image one)
+    {
+        Slides horiz;
+        horiz.slideTags = one.tags;
+        horiz.numTags = 
+    }
+};
+
 int getScore(Image left, Image right)
 {
     int common = 0;
     
-    for (unsigned int i = 0; i < left.tags.size(); i++)
+    for (unsigned int i = 0; i < left.numTags; i++)
     {
-        for (unsigned int j = 0; j < right.tags.size(); j++)
+        for (unsigned int j = 0; j < right.numTags; j++)
         {
             if (left.tags[i] == right.tags[j])
                 common++;
@@ -99,6 +126,17 @@ int getScore(Image left, Image right)
     return returner2;
 }
 
+vector <Slides> getSlides(vector<Image> vertImage)
+{
+    unsigned int loopsize = vertImage.size() / 2;
+    vector <Slides> returnVect;
+    for(unsigned int i = 0; i < loopsize; i++)
+    {
+        Slides newSlide;
+
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     if (argc < 2)
@@ -107,6 +145,7 @@ int main(int argc, char const *argv[])
     {
         Collection *collection = new Collection(argv[1]);
         // collection->GetInput(argv[1]);
+        
     }
 
     return 0;
